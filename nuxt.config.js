@@ -1,9 +1,12 @@
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'nuxt-bnb',
+    titleTemplate: 'NuxtBnB: %s',
     htmlAttrs: {
       lang: 'en'
+    },
+    bodyAttrs: {
+      class: ['body-style']
     },
     meta: [
       { charset: 'utf-8' },
