@@ -36,12 +36,6 @@
 <script>
 import homes from '~/data/homes'
 
-if (process.client) {
-  window.initMap = () => {
-    console.log('test')
-  }
-}
-
 export default {
   data() {
     return {
@@ -61,20 +55,11 @@ export default {
   },
 
   mounted() {
-    const { maps } = window.google
-    const position = new maps.LatLng(
+    this.$maps.showMap(
+      this.$refs.map,
       this.home._geoloc.lat,
       this.home._geoloc.lng
     )
-    const mapOptions = {
-      zoom: 18,
-      center: position,
-      disableDefaultUI: true,
-      zoomControl: true,
-    }
-    const map = new maps.Map(document.getElementById('map'), mapOptions)
-    const marker = new maps.Marker({ position })
-    marker.setMap(map)
   },
 }
 </script>

@@ -15,20 +15,13 @@ export default {
       { name: 'format-detection', content: 'telephone=no' },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
-    script: [
-      {
-        src: 'https://maps.googleapis.com/maps/api/js?key=AIzaSyC-7byupAxt_1QncRygt471jMIPEjYBqIw',
-        hid: 'map',
-        defer: true,
-      },
-    ],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: ['~/plugins/maps.client.js'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
