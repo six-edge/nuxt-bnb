@@ -1,10 +1,10 @@
 <template>
   <div>
-   <nuxt-logo></nuxt-logo>
-   <h1>Nuxt BnB</h1>
-   <div v-for="home in homes" :key="home.objectID">
-    <home-card :home="home" class="home"></home-card>
-   </div>
+    <div v-for="home in homes" :key="home.objectID">
+      <nuxt-link :to="`/home/${home.objectID}`">
+        <home-card :home="home" class="home"></home-card>
+      </nuxt-link>
+    </div>
   </div>
 </template>
 
@@ -14,10 +14,10 @@ import homes from '../data/homes.json'
 export default {
   data() {
     return {
-      homes: homes.slice(0, 3)
+      homes: homes.slice(0, 3),
     }
   },
-  
+
   head() {
     return {
       title: 'Homepage',
@@ -25,11 +25,11 @@ export default {
         {
           name: 'description',
           content: 'This is a homepage',
-          hid: 'description'
-        }
-      ]
+          hid: 'description',
+        },
+      ],
     }
-  }
+  },
 }
 </script>
 

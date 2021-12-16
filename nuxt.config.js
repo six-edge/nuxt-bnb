@@ -3,29 +3,32 @@ export default {
   head: {
     titleTemplate: 'NuxtBnB: %s',
     htmlAttrs: {
-      lang: 'en'
+      lang: 'en',
     },
     bodyAttrs: {
-      class: ['body-style']
+      class: ['body-style'],
     },
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: '' },
-      { name: 'format-detection', content: 'telephone=no' }
+      { name: 'format-detection', content: 'telephone=no' },
     ],
-    link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ]
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    script: [
+      {
+        src: 'https://maps.googleapis.com/maps/api/js?key=AIzaSyC-7byupAxt_1QncRygt471jMIPEjYBqIw',
+        hid: 'map',
+        defer: true,
+      },
+    ],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [
-  ],
+  css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [
-  ],
+  plugins: [],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -37,10 +40,13 @@ export default {
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [
-  ],
+  modules: [],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {
-  }
+  build: {},
+
+  // Router Configuration: https://nuxtjs.org/docs/configuration-glossary/configuration-router
+  router: {
+    prefetchLinks: true,
+  },
 }
