@@ -34,12 +34,10 @@
 </template>
 
 <script>
-import homes from '~/data/homes'
-
 export default {
-  data() {
+  async asyncData({ params, $api }) {
     return {
-      home: {},
+      home: await $api.getHome(params.id),
     }
   },
 
@@ -47,11 +45,6 @@ export default {
     return {
       title: this.home.title,
     }
-  },
-
-  created() {
-    const home = homes.find((home) => home.objectID === this.$route.params.id)
-    this.home = home
   },
 
   mounted() {
