@@ -1,6 +1,10 @@
 export default function (ctx, inject) {
   const appId = '2O2U5PFAF4'
   const apiKey = 'a43ac5ab2def1bf127fac12638e467ac'
+  const headers = {
+    'X-Algolia-API-Key': apiKey,
+    'X-Algolia-Application-Id': appId,
+  }
 
   inject('api', { getHome })
 
@@ -11,15 +15,34 @@ export default function (ctx, inject) {
    * @param {number} id
    */
   async function getHome(id) {
-    const response = await fetch(
-      `https://${appId}-dsn.algolia.net/1/indexes/homes/${id}`,
-      {
-        headers: {
-          'X-Algolia-API-Key': apiKey,
-          'X-Algolia-Application-Id': appId,
-        },
-      }
-    )
-    return await response.json()
+    try {
+      return unwrap(
+        await fetch(`https://${appId}-dsn.algolia.net/1/indexes/homes/${id}`, {
+          headers,
+        })
+      )
+    } catch (err) {
+      return getErrorResponse(err)
+    }
+  }
+
+  async function unwrap(response) {
+    const json = await response.json()
+    const { ok, status, statusText } = response
+    return {
+      json,
+      ok,
+      status,
+      statusText,
+    }
+  }
+
+  function getErrorResponse(error) {
+    return {
+      ok: false,
+      status: 500,
+      statusText: error.message,
+      json: {},
+    }
   }
 }

@@ -35,9 +35,15 @@
 
 <script>
 export default {
-  async asyncData({ params, $api }) {
+  async asyncData({ params, $api, error }) {
+    const response = await $api.getHome(params.id)
+    if (!response.ok)
+      return error({
+        statusCode: response.status,
+        message: response.statusText,
+      })
     return {
-      home: await $api.getHome(params.id),
+      home: response.json,
     }
   },
 
