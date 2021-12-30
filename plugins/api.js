@@ -7,7 +7,7 @@ export default function (ctx, inject) {
     'X-Algolia-Application-Id': appId,
   }
 
-  inject('api', { getHome, getReviewsByHomeId, getUserByHomeId })
+  inject('api', { getHome, getReviewsByHomeId, getUserByHomeId, getHomeByLocation })
 
   /**
    * Get Home by ID
@@ -53,6 +53,25 @@ export default function (ctx, inject) {
           method: 'POST',
           body: JSON.stringify({
             filters: `homeId:${homeId}`,
+            attributesToHighlight: [],
+          }),
+        })
+      )
+    } catch (err) {
+      return getErrorResponse(err)
+    }
+  }
+
+  async function getHomeByLocation(lat, lng, radiusInMeters = 1500) {
+    try {
+      return unwrap(
+        await fetch(`${basePath}/1/indexes/homes/query`, {
+          headers,
+          method: 'POST',
+          body: JSON.stringify({
+            aroundLatLng: `${lat},${lng}`,
+            aroundRadius: radiusInMeters,
+            hitsPerPage: 10,
             attributesToHighlight: [],
           }),
         })
