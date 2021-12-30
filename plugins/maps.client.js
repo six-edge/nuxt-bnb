@@ -1,8 +1,9 @@
 export default function (ctx, inject) {
-  let mapLoaded = false
-  let mapWaiting = null
+  let isLoaded = false
+  let waiting = []
 
   addScript()
+
   inject('maps', {
     showMap,
   })
@@ -17,20 +18,23 @@ export default function (ctx, inject) {
   }
 
   function initMap() {
-    mapLoaded = true
-    if (mapWaiting) {
-      const { canvas, lat, lng } = mapWaiting
-      renderMap(canvas, lat, lng)
-      mapWaiting = null
-    }
+    isLoaded = true
+    waiting.forEach((item) => {
+      if (typeof item.fn === 'function') {
+        item.fn(...item.arguments)
+      }
+    })
+    waiting = []
   }
 
   function showMap(canvas, lat, lng) {
-    if (mapLoaded) renderMap(canvas, lat, lng)
-    else mapWaiting = { canvas, lat, lng }
-  }
-
-  function renderMap(canvas, lat, lng) {
+    if (!isLoaded) {
+      waiting.push({
+        fn: showMap,
+        arguments
+      })
+      return
+    }
     const { maps } = window.google
     const position = new maps.LatLng(lat, lng)
     const mapOptions = {
