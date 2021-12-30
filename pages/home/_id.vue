@@ -30,20 +30,49 @@
     <p>{{ home.bathrooms }} bathrooms</p>
 
     <div id="map" ref="map" class="gmap"></div>
+
+    <div v-for="review in reviews" :key="review.objectID" class="reviews">
+      <p><img :src="review.reviewer.image" /></p>
+      <p>{{ review.reviewer.name }}</p>
+      <p>{{ formatDate(review.date) }}</p>
+      <p><short-text :text="review.comment" :target="150" /></p>
+    </div>
+
+    <div class="user">
+      <img :src="user.image" />
+      <p>{{ user.name }}</p>
+      <p>Joined {{ formatDate(user.joined) }}</p>
+      <p>{{ user.reviewCount }} reviews</p>
+      <p>{{ user.description }}</p>
+    </div>
   </div>
 </template>
 
 <script>
+import ShortText from '~/components/ShortText.vue'
 export default {
+  components: { ShortText },
   async asyncData({ params, $api, error }) {
-    const response = await $api.getHome(params.id)
-    if (!response.ok)
+    const responses = await Promise.all([
+      $api.getHome(params.id),
+      $api.getReviewsByHomeId(params.id),
+      $api.getUserByHomeId(params.id),
+    ])
+
+    const badResponse = responses.find((response) => !response.ok)
+    if (badResponse) {
       return error({
-        statusCode: response.status,
-        message: response.statusText,
+        statusCode: badResponse.status,
+        message: badResponse.statusText,
       })
+    }
+
+    const [homeResponse, reviewResponse, userResponse] = responses
+
     return {
-      home: response.json,
+      home: homeResponse.json,
+      reviews: reviewResponse.json.hits,
+      user: userResponse.json.hits[0],
     }
   },
 
@@ -59,6 +88,16 @@ export default {
       this.home._geoloc.lat,
       this.home._geoloc.lng
     )
+  },
+
+  methods: {
+    formatDate(dateStr) {
+      const date = new Date(dateStr)
+      return date.toLocaleDateString('en-GB', {
+        month: 'long',
+        year: 'numeric',
+      })
+    },
   },
 }
 </script>
