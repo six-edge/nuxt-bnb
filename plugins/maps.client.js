@@ -6,7 +6,7 @@ export default function (ctx, inject) {
 
   inject('maps', {
     showMap,
-    makeAutocomplete
+    makeAutocomplete,
   })
 
   function addScript() {
@@ -33,31 +33,59 @@ export default function (ctx, inject) {
       waiting.push({ fn: makeAutocomplete, arguments })
       return
     }
-    const autocomplete = new window.google.maps.places.Autocomplete(input, { types: ['(cities)'] })
+    const autocomplete = new window.google.maps.places.Autocomplete(input, {
+      types: ['(cities)'],
+    })
     autocomplete.addListener('place_changed', () => {
       const place = autocomplete.getPlace()
       input.dispatchEvent(new CustomEvent('changed', { detail: place }))
     })
   }
 
-  function showMap(canvas, lat, lng) {
+  function showMap(canvas, lat, lng, markers = []) {
     if (!isLoaded) {
       waiting.push({
         fn: showMap,
-        arguments
+        arguments,
       })
       return
     }
     const { maps } = window.google
-    const position = new maps.LatLng(lat, lng)
     const mapOptions = {
       zoom: 18,
-      center: position,
+      center: new maps.LatLng(lat, lng),
       disableDefaultUI: true,
       zoomControl: true,
+      styles: [
+        {
+          featureType: 'poi.business',
+          elementType: 'labels.icon',
+          stylers: [{ visibility: 'off' }],
+        },
+      ],
     }
     const map = new maps.Map(canvas, mapOptions)
-    const marker = new maps.Marker({ position })
-    marker.setMap(map)
+    if (markers.length === 0) {
+      const position = new maps.LatLng(lat, lng)
+      const marker = new maps.Marker({ position, clickable: false })
+      marker.setMap(map)
+      return
+    }
+    const bounds = new maps.LatLngBounds()
+    markers.forEach((home) => {
+      const position = new maps.LatLng(home.lat, home.lng)
+      const marker = new maps.Marker({
+        position,
+        label: {
+          text: `$${home.pricePerNight}`,
+          className: `marker home-${home.id}`,
+        },
+        icon: 'https://maps.gstatic.com/mapfiles/transparent.png',
+        clickable: false,
+      })
+      marker.setMap(map)
+      bounds.extend(position)
+    })
+    map.fitBounds(bounds)
   }
 }
