@@ -1,27 +1,45 @@
 <template>
-  <div style="clear: left; padding: 10px">
-    <img
-      :alt="home.title"
-      :src="home.images[0]"
-      style="width: 250px; float: left; padding: 10px"
-    />
-    <p>{{ home.title }}</p>
-    <p>
-      {{ home.location.address }} {{ home.location.city }}
-      {{ home.location.state }}
-    </p>
-    <p>
-      {{ pluralize(home.guests, 'guest') }},
-      {{ pluralize(home.bedrooms, 'room') }}, {{ pluralize(home.beds, 'bed') }},
-      {{ pluralize(home.bathrooms, 'bathroom') }}
-    </p>
-    <p>{{ home.pricePerNight }} / night</p>
-    <img alt="Rating" src="/images/star.svg" width="20" height="20" />
-    {{ home.reviewValue }} ({{ home.reviewCount }})
+  <div>
+    <div
+      class="app-house-header"
+      :style="`background-image:url(${home.images[0]})`"
+    ></div>
+    <div class="app-house-body">
+      <img
+        src="/images/icons/heart.svg"
+        class="app-fav"
+        alt="Add to favorite list"
+      />
+      <h2>{{ home.title }}</h2>
+
+      <div class="app-address">
+        {{ home.location.address }} {{ home.location.city }}
+        {{ home.location.state }}
+      </div>
+
+      <div class="app-amenities">
+        <p>
+          {{ pluralize(home.guests, 'guest') }} &middot;
+          {{ pluralize(home.bedrooms, 'room') }} &middot;
+          {{ pluralize(home.beds, 'bed') }} &middot;
+          {{ pluralize(home.bathrooms, 'bathroom') }}
+        </p>
+        <p>{{ features }}</p>
+      </div>
+      <div class="app-flex">
+        <div class="app-rating">
+          {{ home.reviewValue }} <span>({{ home.reviewCount }})</span>
+        </div>
+        <div class="app-price">
+          {{ home.pricePerNight }}<span> / night</span>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import pluralize from '~/utils/pluralize'
 export default {
   props: {
     home: {
@@ -29,11 +47,13 @@ export default {
       required: true,
     },
   },
-  methods: {
-    pluralize(number, singularWord) {
-      const text = `${number} ${singularWord}`
-      return number === 1 ? text : text + 's'
+  computed: {
+    features() {
+      return this.home.features.slice(0, 3).join(', ')
     },
+  },
+  methods: {
+    pluralize,
   },
 }
 </script>
