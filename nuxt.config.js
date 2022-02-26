@@ -38,7 +38,7 @@ export default {
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [],
+  modules: ['~/modules/auth.js', '~/modules/algolia.js'],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
@@ -58,6 +58,17 @@ export default {
       cookieName: 'idToken',
       clientId:
         '1052365374882-ebfkth44l98bc80ittl846se45v6kl1t.apps.googleusercontent.com',
+    },
+    algolia: {
+      appId: '2O2U5PFAF4',
+      apiKey: 'a43ac5ab2def1bf127fac12638e467ac',
+    },
+  },
+
+  privateRuntimeConfig: {
+    algolia: {
+      appId: '2O2U5PFAF4',
+      apiKey: '4603591475fa5162997bed2f35bfc301',
     },
   },
 }

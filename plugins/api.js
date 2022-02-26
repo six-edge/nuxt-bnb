@@ -1,13 +1,20 @@
-export default function (ctx, inject) {
-  const appId = '2O2U5PFAF4'
-  const apiKey = 'a43ac5ab2def1bf127fac12638e467ac'
+import { getErrorResponse, unwrap } from '~/utils/fetchUtils'
+
+export default function ({ $config }, inject) {
+  const appId = $config.algolia.appId
+  const apiKey = $config.algolia.apiKey
   const basePath = `https://${appId}-dsn.algolia.net`
   const headers = {
     'X-Algolia-API-Key': apiKey,
     'X-Algolia-Application-Id': appId,
   }
 
-  inject('api', { getHome, getReviewsByHomeId, getUserByHomeId, getHomeByLocation })
+  inject('api', {
+    getHome,
+    getReviewsByHomeId,
+    getUserByHomeId,
+    getHomeByLocation,
+  })
 
   /**
    * Get Home by ID
@@ -78,26 +85,6 @@ export default function (ctx, inject) {
       )
     } catch (err) {
       return getErrorResponse(err)
-    }
-  }
-
-  async function unwrap(response) {
-    const json = await response.json()
-    const { ok, status, statusText } = response
-    return {
-      json,
-      ok,
-      status,
-      statusText,
-    }
-  }
-
-  function getErrorResponse(error) {
-    return {
-      ok: false,
-      status: 500,
-      statusText: error.message,
-      json: {},
     }
   }
 }
