@@ -1,4 +1,4 @@
-export default function (ctx, inject) {
+export default function ({ $config }, inject) {
   let isLoaded = false
   let waiting = []
 
@@ -11,8 +11,7 @@ export default function (ctx, inject) {
 
   function addScript() {
     const script = document.createElement('script')
-    script.src =
-      'https://maps.googleapis.com/maps/api/js?key=AIzaSyC-7byupAxt_1QncRygt471jMIPEjYBqIw&libraries=places&callback=initMap'
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${$config.maps.apiKey}&libraries=places&callback=initMap`
     script.async = true
     window.initMap = initMap
     document.head.appendChild(script)
