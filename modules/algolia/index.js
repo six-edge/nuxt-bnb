@@ -10,7 +10,7 @@ export default function () {
   const apis = getApis(algoliaConfig)
 
   nuxt.hook('render:setupMiddleware', (app) => {
-    app.use(bodyParser.urlencoded())
+    app.use(bodyParser.json())
     app.use('/api/user', userRouter(apis))
     app.use('/api/homes', homesRouter(apis))
   })

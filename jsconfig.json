@@ -9,5 +9,8 @@
     }
   },
   "exclude": ["node_modules", ".nuxt", "dist"],
-  "resolveJsonModule": true
+  "resolveJsonModule": true,
+  "vueCompilerOptions": {
+    "target": 2.7
+  }
 }

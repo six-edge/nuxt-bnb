@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid'
+import { v4 as uuid } from 'uuid'
 import { isValidBody, badRequest, sendJSON } from '../helpers'
 
 export default function (apis) {
@@ -9,7 +9,7 @@ export default function (apis) {
     return badRequest(res)
   }
   async function createHome(identity, body, res) {
-    const homeId = uuidv4()
+    const homeId = uuid()
     const payload = {
       ...body,
       reviewCount: 0,
@@ -20,7 +20,7 @@ export default function (apis) {
 
     if (!response.ok) {
       res.statusCode = 500
-      res.send()
+      res.end()
       return
     }
     sendJSON({}, res)

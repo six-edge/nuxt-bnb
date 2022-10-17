@@ -50,7 +50,8 @@ export function sendJSON(data, res) {
  * @param res
  */
 export function badRequest(res) {
-  res.status(400).end()
+  res.statusCode = 400
+  res.end()
 }
 
 /**

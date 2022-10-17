@@ -12,9 +12,9 @@
       <h3>Title</h3>
       <input v-model="home.title" type="text" class="w-60" />
       <h3>Description</h3>
-      <textarea v-model="home.description" class="w-104" />
+      <textarea v-model="home.description" class="w-104"></textarea>
       <h3>Note</h3>
-      <textarea v-model="home.note" class="w-104" />
+      <textarea v-model="home.note" class="w-104"></textarea>
       <h3>Features</h3>
       <input v-model="home.features[0]" type="text" class="w-26" />
       <input v-model="home.features[1]" type="text" class="w-26" />
@@ -33,17 +33,30 @@
       <label>Bathrooms</label>
       <input v-model="home.bathrooms" type="number" class="w-14" />
       <h3>Location</h3>
-      <label>Address</label
-      ><input v-model="home.location.address" type="text" class="w-60" />
-      <label>City</label>
-      <input v-model="home.location.city" type="text" class="w-60" />
-      <label>State</label>
-      <input v-model="home.location.state" type="text" class="w-60" />
-      <label>Postal Code</label>
-      <input v-model="home.location.postalCode" type="text" class="w-60" />
-      <label>Country</label>
-      <input v-model="home.location.country" type="text" class="w-60" />
-
+      <p>
+        <label>Search</label>
+        <input ref="locationSelector" type="text" autocomplete="off" placeholder="address" @changed="changed">
+      </p>
+      <p>
+        <label>Address</label>
+        <input v-model="home.location.address" type="text" class="w-60" />
+      </p>
+      <p>
+        <label>City</label>
+        <input v-model="home.location.city" type="text" class="w-60" />
+      </p>
+      <p>
+        <label>State</label>
+        <input v-model="home.location.state" type="text" class="w-60" />
+      </p>
+      <p>
+        <label>Postal Code</label>
+        <input v-model="home.location.postalCode" type="text" class="w-60" />
+      </p>
+      <p>
+        <label>Country</label>
+        <input v-model="home.location.country" type="text" class="w-60" />
+      </p>
       <div>
         <button class="border px-4 py-2 border-gray-400 bg-green-300">
           Add
@@ -75,8 +88,8 @@ export default {
           country: '',
         },
         _geoloc: {
-          lat: 66.666666,
-          lng: 66.666666,
+          lat: '',
+          lng: '',
         },
         images: [
           'https://images.unsplash.com/photo-1518780664697-55e3ad937233?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=765&q=80',
@@ -88,7 +101,28 @@ export default {
       },
     }
   },
+  mounted() { 
+    this.$maps.makeAutocomplete(this.$refs.locationSelector, ['address'])
+  },
   methods: {
+    changed(event) {
+      const parts = event.detail.address_components
+      const street = this.getAddressPart(parts, 'street_number')
+      const route = this.getAddressPart(parts, 'route')
+
+      this.home.location.address = `${street} ${route}`
+      this.home.location.city = this.getAddressPart(parts, 'locality') || this.getAddressPart(parts, 'postal_town')
+      this.home.location.state = this.getAddressPart(parts, 'administrative_area_level_2')
+      this.home.location.country = this.getAddressPart(parts, 'country')
+      this.home.location.postalCode = this.getAddressPart(parts, 'postal_code')
+      this.home._geoloc.lat = event.detail.geometry.location.lat()
+      this.home._geoloc.lng = event.detail.geometry.location.lng()
+
+      console.log(parts)
+    },
+    getAddressPart(parts = [], type = '') {
+      return parts.find(part => part.types.includes(type))?.long_name || ''
+    },
     async submit() {
       await fetch('/api/homes', {
         method: 'POST',
