@@ -30,8 +30,8 @@ export default {
 
     return {
       home: homeResponse.json,
-      reviews: reviewResponse.json.hits,
-      user: userResponse.json.hits[0],
+      reviews: reviewResponse.json.hits || [],
+      user: userResponse.json.hits[0] || {},
     }
   },
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="app-background-grey">
+  <div v-if="user.name" class="app-background-grey">
     <div class="app-wrapper app-padded-vertical">
       <div class="app-host-header">
         <div><img :src="user.image" alt="Host Avatar" /></div>
@@ -16,6 +16,7 @@
       <div class="app-host-description">{{ user.description }}</div>
     </div>
   </div>
+  <h2 v-else class="app-subtitle">User not found</h2>
 </template>
 
 <script>

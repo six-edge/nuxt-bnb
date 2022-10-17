@@ -1,5 +1,5 @@
 <template>
-  <div class="app-padded-vertical">
+  <div v-if="reviews.length" class="app-padded-vertical">
     <div class="app-wrapper">
       <div class="app-testimonials">
         <div v-for="(review, index) in reviews" :key="index">
@@ -17,6 +17,7 @@
       </div>
     </div>
   </div>
+  <h2 v-else class="app-subtitle">No reviews</h2>
 </template>
 
 <script>
