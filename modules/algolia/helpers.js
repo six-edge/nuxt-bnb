@@ -44,3 +44,19 @@ export function sendJSON(data, res) {
   res.setHeader('Content-Type', 'application/json')
   res.end(JSON.stringify(data))
 }
+
+/**
+ * Send HTTP 400 Bad Request response
+ * @param res
+ */
+export function badRequest(res) {
+  res.status(400).end()
+}
+
+/**
+ * Send HTTP 400 Bad Request response
+ * @param req
+ */
+export function isValidBody(req) {
+  return req.body && Object.keys(req.body).length > 0
+}
